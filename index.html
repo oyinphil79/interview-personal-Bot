@@ -21,7 +21,7 @@
           <span class="brand-mark" aria-hidden="true"></span>
           <div>
             <h1>AI Role Interview Coach</h1>
-            <p class="subtitle">Practice for the AI job you want, powered by Gemini</p>
+            <p class="subtitle">Practice for the AI job you want, powered by OpenAI</p>
           </div>
         </div>
         <button id="keyBtn" class="ghost-btn" type="button">
@@ -71,25 +71,25 @@
       </main>
 
       <footer class="foot muted">
-        Your API key stays in your browser and is sent only to Google’s Gemini API.
+        Your API key stays in your browser and is sent only to the OpenAI API.
       </footer>
     </div>
 
     <dialog id="keyDialog" class="key-dialog">
       <form method="dialog" id="keyForm">
-        <h3>Enter your Gemini API key</h3>
+        <h3>Enter your OpenAI API key</h3>
         <p class="muted">
           Get a key from
-          <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Google AI Studio</a>.
+          <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">the OpenAI dashboard</a>.
           It is stored only in this browser.
         </p>
         <label class="field">
           <span>API key</span>
-          <input id="keyInput" type="password" placeholder="AIza…" autocomplete="off" required />
+          <input id="keyInput" type="password" placeholder="sk-…" autocomplete="off" required />
         </label>
         <label class="field">
           <span>Model</span>
-          <input id="modelInput" type="text" placeholder="gemini-3.8-flash" />
+          <input id="modelInput" type="text" placeholder="gpt-5-mini" />
         </label>
         <label class="check">
           <input id="rememberKey" type="checkbox" checked />

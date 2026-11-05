@@ -1,30 +1,32 @@
-// Minimal Gemini REST client with streaming (Server-Sent Events).
+// Minimal OpenAI Chat Completions client with streaming (Server-Sent Events).
 
-export const DEFAULT_MODEL = 'gemini-3.8-flash';
-const BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
+export const DEFAULT_MODEL = 'gpt-5-mini';
+const URL = 'https://api.openai.com/v1/chat/completions';
 
 /**
- * Stream a chat completion from Gemini.
+ * Stream a chat completion from OpenAI.
  * @param {object} opts
  * @param {string} opts.apiKey
  * @param {string} opts.model
  * @param {string} opts.system  system instruction
- * @param {{role:'user'|'model', text:string}[]} opts.history
+ * @param {{role:'user'|'assistant', text:string}[]} opts.history
  * @param {(chunk:string)=>void} opts.onChunk
  * @param {AbortSignal} [opts.signal]
  * @returns {Promise<string>} full text
  */
 export async function streamChat({ apiKey, model, system, history, onChunk, signal }) {
-  const url = `${BASE}/${encodeURIComponent(model || DEFAULT_MODEL)}:streamGenerateContent?alt=sse`;
   const body = {
-    systemInstruction: { parts: [{ text: system }] },
-    contents: history.map((m) => ({ role: m.role, parts: [{ text: m.text }] })),
-    generationConfig: { temperature: 0.7, maxOutputTokens: 2048 },
+    model: model || DEFAULT_MODEL,
+    stream: true,
+    messages: [
+      { role: 'system', content: system },
+      ...history.map((m) => ({ role: m.role, content: m.text })),
+    ],
   };
 
-  const res = await fetch(url, {
+  const res = await fetch(URL, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
     body: JSON.stringify(body),
     signal,
   });
@@ -60,11 +62,7 @@ export async function streamChat({ apiKey, model, system, history, onChunk, sign
       const data = line.slice(5).trim();
       if (!data || data === '[DONE]') continue;
       try {
-        const json = JSON.parse(data);
-        const text = (json.candidates?.[0]?.content?.parts || [])
-          .filter((p) => !p.thought)
-          .map((p) => p.text || '')
-          .join('');
+        const text = JSON.parse(data).choices?.[0]?.delta?.content;
         if (text) {
           full += text;
           onChunk(text);

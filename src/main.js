@@ -2,7 +2,7 @@ import './style.css';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
 import { ROLES, buildSystemPrompt } from './roles.js';
-import { streamChat, DEFAULT_MODEL } from './gemini.js';
+import { streamChat, DEFAULT_MODEL } from './openai.js';
 
 marked.setOptions({ breaks: true, gfm: true });
 
@@ -33,8 +33,8 @@ const store = {
 
 // ---------- state ----------
 const state = {
-  apiKey: store.get('gemini_api_key') || '',
-  model: store.get('gemini_model') || DEFAULT_MODEL,
+  apiKey: store.get('openai_api_key') || '',
+  model: store.get('openai_model') || DEFAULT_MODEL,
   roleId: store.get('active_role') in ROLES ? store.get('active_role') : 'aipm',
   mode: 'coach',
   // separate conversation per role
@@ -223,8 +223,8 @@ async function send(text) {
   el.input.value = '';
   autoGrow();
 
-  const botMsg = { role: 'model', text: '' };
-  const node = messageNode('model', '');
+  const botMsg = { role: 'assistant', text: '' };
+  const node = messageNode('assistant', '');
   node.classList.add('streaming');
   node.querySelector('.bubble').innerHTML = '<span class="typing"><i></i><i></i><i></i></span>';
   el.messages.appendChild(node);
@@ -259,7 +259,7 @@ async function send(text) {
       if (err.status === 404)
         msg += `\n\nModel \`${state.model}\` was not found. You can change the model in the API key settings.`;
       if (err.status === 429) msg += '\n\nRate limit reached — wait a moment and try again.';
-      chat.push({ role: 'model', text: msg, error: true });
+      chat.push({ role: 'assistant', text: msg, error: true });
     }
   } finally {
     setBusy(false);
@@ -319,11 +319,11 @@ el.keyForm.addEventListener('submit', (e) => {
   state.apiKey = key;
   state.model = el.modelInput.value.trim() || DEFAULT_MODEL;
   if (el.remember.checked) {
-    store.set('gemini_api_key', key);
-    store.set('gemini_model', state.model);
+    store.set('openai_api_key', key);
+    store.set('openai_model', state.model);
   } else {
-    store.del('gemini_api_key');
-    store.del('gemini_model');
+    store.del('openai_api_key');
+    store.del('openai_model');
   }
   renderKeyStatus();
   el.input.focus();
