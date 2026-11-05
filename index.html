@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Role Interview Coach</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-glow" aria-hidden="true"></div>
+
+    <div class="app">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <div>
+            <h1>AI Role Interview Coach</h1>
+            <p class="subtitle">Practice for the AI job you want, powered by Gemini</p>
+          </div>
+        </div>
+        <button id="keyBtn" class="ghost-btn" type="button">
+          <span class="dot" id="keyDot"></span>
+          <span id="keyBtnLabel">Set API key</span>
+        </button>
+      </header>
+
+      <nav class="role-tabs" id="roleTabs" role="tablist" aria-label="Choose a role"></nav>
+
+      <main class="chat-card">
+        <div class="chat-head">
+          <div>
+            <h2 id="roleTitle"></h2>
+            <p id="roleBlurb" class="muted"></p>
+          </div>
+          <div class="chat-controls">
+            <label class="mode-select">
+              <span>Mode</span>
+              <select id="modeSelect">
+                <option value="coach">Coach (Q&amp;A)</option>
+                <option value="mock">Mock interview</option>
+                <option value="feedback">Answer review</option>
+              </select>
+            </label>
+            <button id="clearBtn" class="ghost-btn small" type="button">Clear chat</button>
+          </div>
+        </div>
+
+        <div id="messages" class="messages" aria-live="polite"></div>
+
+        <div id="suggestions" class="suggestions"></div>
+
+        <form id="composer" class="composer">
+          <textarea
+            id="input"
+            rows="1"
+            placeholder="Ask a question, or type “start” to begin a mock interview…"
+            autocomplete="off"
+          ></textarea>
+          <button id="sendBtn" class="send-btn" type="submit" aria-label="Send">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+              <path fill="currentColor" d="M3.4 20.4 21 12 3.4 3.6 3.4 10l12.6 2-12.6 2z" />
+            </svg>
+          </button>
+        </form>
+      </main>
+
+      <footer class="foot muted">
+        Your API key stays in your browser and is sent only to Google’s Gemini API.
+      </footer>
+    </div>
+
+    <dialog id="keyDialog" class="key-dialog">
+      <form method="dialog" id="keyForm">
+        <h3>Enter your Gemini API key</h3>
+        <p class="muted">
+          Get a key from
+          <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Google AI Studio</a>.
+          It is stored only in this browser.
+        </p>
+        <label class="field">
+          <span>API key</span>
+          <input id="keyInput" type="password" placeholder="AIza…" autocomplete="off" required />
+        </label>
+        <label class="field">
+          <span>Model</span>
+          <input id="modelInput" type="text" placeholder="gemini-3.8-flash" />
+        </label>
+        <label class="check">
+          <input id="rememberKey" type="checkbox" checked />
+          Remember on this device
+        </label>
+        <p id="keyError" class="error" hidden></p>
+        <div class="dialog-actions">
+          <button type="button" id="keyCancel" class="ghost-btn small">Cancel</button>
+          <button type="submit" id="keySave" class="primary-btn">Save &amp; start</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
